@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新建申请</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <style>
+        .application-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img th:src="@{/images/default-avatar.png}" alt="用户头像" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NzdFRUEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkMxNC4yMDkxIDEyIDE2IDEwLjIwOTEgMTYgOEMxNiA1Ljc5MDg2IDE0LjIwOTEgNCAxMiA0QzkuNzkwODYgNCA4IDUuNzkwODYgOCA4QzggMTAuMjA5MSA5Ljc5MDg2IDEyIDEyIDEyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyIDE0QzguNjc5MTUgMTQgNiAxNi42NzkxIDYgMjBIMThDMTggMTYuNjc5MSAxNS4zMjA5IDE0IDEyIDE0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='"/>
+                    </div>
+                    <div class="user-details">
+                        <div class="username" th:text="${#authentication.name}">用户</div>
+                        <div class="user-status">
+                            <span class="status-dot online"></span>
+                            <span>在线</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="logout-btn">
+                    <a th:href="@{/logout}" class="logout-link">
+                        <span class="logout-icon">↩</span>
+                        <span>注销</span>
+                    </a>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li>
+                        <a th:href="@{/student/home}" class="nav-item">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">主页</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/student/profile}" class="nav-item">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">完善资料</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/student/application/new}" class="nav-item active">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">新建申请</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/student/application/progress}" class="nav-item">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">申请进度</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <span>新建申请</span>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="card">
+                    <h2>新建资助申请</h2>
+                    <div class="application-form">
+                        <div th:if="${success != null}" class="alert alert-success">
+                            <span th:text="${success}"></span>
+                        </div>
+                        <div th:if="${error != null}" class="alert alert-danger">
+                            <span th:text="${error}"></span>
+                        </div>
+                        
+                        <form th:action="@{/student/application/create}" method="post">
+                            <div class="form-group">
+                                <label>申请类型</label>
+                                <select name="type" class="form-control" required onchange="updateTypeInfo(this.value)">
+                                    <option value="">请选择申请类型</option>
+                                    <option value="grant">助学金</option>
+                                    <option value="scholarship">国家励志奖学金</option>
+                                </select>
+                                <small class="form-text">注意：每种类型只能有一个进行中的申请</small>
+                                <div id="type-info" class="type-info" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                    <h5 id="type-title"></h5>
+                                    <p id="type-description"></p>
+                                    <ul id="type-requirements"></ul>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>申请理由</label>
+                                <textarea name="reason" class="form-control" rows="5" placeholder="请详细说明申请理由..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">保存为草稿</button>
+                                <a class="btn btn-outline" th:href="@{/student/application/progress}">返回进度</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+function updateTypeInfo(type) {
+    const typeInfo = document.getElementById('type-info');
+    const typeTitle = document.getElementById('type-title');
+    const typeDescription = document.getElementById('type-description');
+    const typeRequirements = document.getElementById('type-requirements');
+    
+    if (type === 'grant') {
+        typeInfo.style.display = 'block';
+        typeTitle.textContent = '助学金申请';
+        typeDescription.textContent = '助学金主要面向家庭经济困难的学生，提供基本生活保障。';
+        typeRequirements.innerHTML = `
+            <li>家庭经济困难，生活俭朴</li>
+            <li>诚实守信，道德品质优良</li>
+            <li>勤奋学习，积极上进</li>
+            <li>遵守宪法和法律，遵守学校规章制度</li>
+            <li>需要提供家庭经济困难证明材料</li>
+        `;
+    } else if (type === 'scholarship') {
+        typeInfo.style.display = 'block';
+        typeTitle.textContent = '国家励志奖学金申请';
+        typeDescription.textContent = '国家励志奖学金用于奖励品学兼优的家庭经济困难学生。';
+        typeRequirements.innerHTML = `
+            <li>家庭经济困难，生活俭朴</li>
+            <li>诚实守信，道德品质优良</li>
+            <li>在校期间学习成绩优秀，无不及格科目</li>
+            <li>遵守宪法和法律，遵守学校规章制度</li>
+            <li>需要提供家庭经济困难证明材料和成绩排名表</li>
+        `;
+    } else {
+        typeInfo.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>

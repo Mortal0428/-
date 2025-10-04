@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>公示详情</title>
+</head>
+<body>
+<h2>公示详情</h2>
+<p>申请人：<span th:text="${publicity.application.student.name}"></span></p>
+<p>类型：<span th:text="${publicity.application.type}"></span></p>
+<p>公示起止：<span th:text="${#temporals.format(publicity.startTime, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(publicity.endTime, 'yyyy-MM-dd')}"></span></p>
+<p>状态：<span th:text="${publicity.status == 'publicizing' ? '公示中' : (publicity.status == 'has_objection' ? '有异议' : '无异议')}"></span></p>
+<div th:if="${publicity.status == 'has_objection'}">
+    <h4>异议内容：</h4>
+    <p th:text="${publicity.objectionContent}"></p>
+    <p>异议人：<span th:text="${publicity.objectionUser != null ? publicity.objectionUser.name : ''}"></span></p>
+    <p>异议时间：<span th:text="${#temporals.format(publicity.objectionTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+</div>
+<div th:if="${publicity.status == 'publicizing'}">
+    <form th:action="@{/publicity/objection}" method="post">
+        <input type="hidden" name="publicityId" th:value="${publicity.id}" />
+        <label>如有异议，请填写：</label><br>
+        <textarea name="objectionContent" rows="4" cols="40" required></textarea><br>
+        <button type="submit">提交异议</button>
+    </form>
+</div>
+<a th:href="@{/publicity}">返回公示列表</a>
+</body>
+</html>
+

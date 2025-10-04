@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>申请详情 - 评议小组</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h2>申请详情</h2>
+        <div class="nav-links">
+            <a class="btn" th:href="@{/group/review}">返回列表</a>
+        </div>
+        
+        <div th:if="${app != null}">
+            <div class="detail-section">
+                <h3>基本信息</h3>
+                <table class="table">
+                    <tr><td><strong>学生姓名</strong></td><td th:text="${app.student.name}"></td></tr>
+                    <tr><td><strong>学号</strong></td><td th:text="${app.student.studentNo}"></td></tr>
+                    <tr><td><strong>班级</strong></td><td th:text="${app.student.className}"></td></tr>
+                    <tr><td><strong>学院</strong></td><td th:text="${app.student.college}"></td></tr>
+                    <tr><td><strong>申请类型</strong></td><td th:text="${app.type == 'grant' ? '助学金' : '国家励志奖学金'}"></td></tr>
+                    <tr><td><strong>申请状态</strong></td><td th:text="${app.status}"></td></tr>
+                    <tr><td><strong>提交时间</strong></td><td th:text="${#temporals.format(app.submitTime, 'yyyy-MM-dd HH:mm:ss')}"></td></tr>
+                </table>
+            </div>
+            
+            <div class="detail-section">
+                <h3>申请理由</h3>
+                <div class="reason-box" th:text="${app.reason}"></div>
+            </div>
+            
+            <div class="detail-section">
+                <h3>上传材料</h3>
+                <div th:if="${materials.isEmpty()}">
+                    <p class="no-data">暂无上传材料</p>
+                </div>
+                <div th:if="${!materials.isEmpty()}">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>说明</th>
+                                <th>上传时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="m : ${materials}">
+                                <td th:text="${m.filePath}"></td>
+                                <td th:text="${m.description}"></td>
+                                <td th:text="${#temporals.format(m.uploadTime, 'yyyy-MM-dd HH:mm')}"></td>
+                                <td>
+                                    <a class="btn btn-sm" th:href="${m.filePath}" target="_blank">查看</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h3>审核操作</h3>
+                <div class="review-forms">
+                    <form th:action="@{'/group/review/' + ${app.id}}" method="post" class="review-form">
+                        <h4>通过申请</h4>
+                        <div class="form-group">
+                            <label>审核意见：</label>
+                            <textarea name="reason" placeholder="请输入审核意见..." rows="3" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;"></textarea>
+                        </div>
+                        <input type="hidden" name="result" value="approved"/>
+                        <button class="btn" type="submit">通过</button>
+                    </form>
+                    
+                    <form th:action="@{'/group/review/' + ${app.id}}" method="post" class="review-form">
+                        <h4>驳回申请</h4>
+                        <div class="form-group">
+                            <label>驳回理由：</label>
+                            <textarea name="reason" placeholder="请输入驳回理由..." rows="3" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;" required></textarea>
+                        </div>
+                        <input type="hidden" name="result" value="rejected"/>
+                        <button class="btn btn-outline" type="submit">驳回</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .detail-section {
+        margin: 20px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .reason-box {
+        background: white;
+        padding: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        min-height: 80px;
+        white-space: pre-wrap;
+    }
+    
+    .review-forms {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 15px;
+    }
+    
+    .review-form {
+        background: white;
+        padding: 20px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+    
+    .review-form h4 {
+        margin: 0 0 15px 0;
+        color: #1976d2;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    
+    .no-data {
+        text-align: center;
+        color: #6c757d;
+        padding: 20px;
+        font-style: italic;
+    }
+    
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+</style>
+</body>
+</html>

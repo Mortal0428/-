@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>辅导员审核</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h2>待审核（辅导员）</h2>
+        <table class="table">
+            <tr><th>学生</th><th>类型</th><th>理由</th><th>操作</th></tr>
+            <tr th:each="a : ${apps}">
+                <td th:text="${a.student.name}"></td>
+                <td th:text="${a.type}"></td>
+                <td th:text="${a.reason}"></td>
+                <td>
+                    <form th:action="@{'/counselor/review/' + ${a.id}}" method="post" style="display:inline;">
+                        <input type="hidden" name="result" value="approved"/>
+                        <input type="text" name="reason" placeholder="意见"/>
+                        <button class="btn" type="submit">通过</button>
+                    </form>
+                    <form th:action="@{'/counselor/review/' + ${a.id}}" method="post" style="display:inline; margin-left:6px;">
+                        <input type="hidden" name="result" value="rejected"/>
+                        <input type="text" name="reason" placeholder="理由"/>
+                        <button class="btn btn-outline" type="submit">驳回</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(apps)}"><td colspan="4">暂无待审核</td></tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
+

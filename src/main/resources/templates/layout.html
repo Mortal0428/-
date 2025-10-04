@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="~{::title}">Aid System</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<header class="nav">
+    <div class="nav-inner">
+        <a class="brand" th:href="@{/}">Aid</a>
+        <nav class="links">
+            <a th:href="@{/announcements}">公告</a>
+            <a th:href="@{/publicity}">公示</a>
+            <a th:href="@{/student/home}" th:if="${#authorization.expression('hasRole(''ADMIN'') == false')}" >学生主页</a>
+            <a th:href="@{/admin/user/import}" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">管理员</a>
+        </nav>
+    </div>
+</header>
+<main class="container" th:replace="~{::section}">
+    <section>
+        <p>Content</p>
+    </section>
+</main>
+<footer class="footer">© 2025 Aid System</footer>
+</body>
+</html>
+
+

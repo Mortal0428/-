@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>学生主页</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img th:src="@{/images/default-avatar.png}" alt="用户头像" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NzdFRUEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkMxNC4yMDkxIDEyIDE2IDEwLjIwOTEgMTYgOEMxNiA1Ljc5MDg2IDE0LjIwOTEgNCAxMiA0QzkuNzkwODYgNCA4IDUuNzkwODYgOCA4QzggMTAuMjA5MSA5Ljc5MDg2IDEyIDEyIDEyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyIDE0QzguNjc5MTUgMTQgNiAxNi42NzkxIDYgMjBIMThDMTggMTYuNjc5MSAxNS4zMjA5IDE0IDEyIDE0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='"/>
+                    </div>
+                    <div class="user-details">
+                        <div class="username" th:text="${#authentication.name}">用户</div>
+                        <div class="user-status">
+                            <span class="status-dot online"></span>
+                            <span>在线</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="logout-btn">
+                    <a th:href="@{/logout}" class="logout-link">
+                        <span class="logout-icon">↩</span>
+                        <span>注销</span>
+                    </a>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li>
+                        <a th:href="@{/student/home}" class="nav-item active">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">主页</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/student/profile}" class="nav-item">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">完善资料</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/student/application/new}" class="nav-item">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">新建申请</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/student/application/progress}" class="nav-item">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">申请进度</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <span>学生主页</span>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="welcome">欢迎，<span th:text="${username}"></span>！</div>
+                    <h2 style="margin-top:0;">公告</h2>
+                    <table class="table">
+                        <tr>
+                            <th>标题</th>
+                            <th>发布时间</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr th:each="a : ${announcements}">
+                            <td th:text="${a.title}"></td>
+                            <td th:text="${#temporals.format(a.createTime, 'yyyy-MM-dd HH:mm')}"></td>
+                            <td><a th:href="@{'/announcements/' + ${a.id}}">查看详情</a></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(announcements)}">
+                            <td colspan="3">暂无公告</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0;">公示</h2>
+                    <table class="table">
+                        <tr>
+                            <th>申请人</th>
+                            <th>类型</th>
+                            <th>公示起止</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr th:each="p : ${publicities}">
+                            <td th:text="${p.application.student.name}"></td>
+                            <td th:text="${p.application.type == 'grant' ? '助学金' : '国家励志奖学金'}"></td>
+                            <td th:text="${#temporals.format(p.startTime, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(p.endTime, 'yyyy-MM-dd')}"></td>
+                            <td th:text="${p.status == 'publicizing' ? '公示中' : (p.status == 'has_objection' ? '有异议' : '无异议')}"></td>
+                            <td><a th:href="@{'/publicity/' + ${p.id}}">查看详情</a></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(publicities)}">
+                            <td colspan="5">暂无公示</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

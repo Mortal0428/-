@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>申请进度测试</title>
+</head>
+<body>
+    <h1>申请进度页面测试</h1>
+    
+    <div>
+        <h2>调试信息：</h2>
+        <p>allApplications: <span th:text="${allApplications != null ? allApplications.size() : 'null'}"></span></p>
+        <p>app: <span th:text="${app != null ? app.id : 'null'}"></span></p>
+        <p>materials: <span th:text="${materials != null ? materials.size() : 'null'}"></span></p>
+    </div>
+    
+    <div th:if="${allApplications == null or allApplications.isEmpty()}">
+        <p>您还没有创建任何申请。</p>
+        <a th:href="@{/student/application/new}">新建申请</a>
+    </div>
+    
+    <div th:if="${allApplications != null and !allApplications.isEmpty()}">
+        <h3>您的申请列表：</h3>
+        <ul>
+            <li th:each="appItem : ${allApplications}">
+                ID: <span th:text="${appItem.id}"></span> - 
+                类型: <span th:text="${appItem.type}"></span> - 
+                状态: <span th:text="${appItem.status}"></span>
+            </li>
+        </ul>
+    </div>
+    
+    <div th:if="${app != null}">
+        <h3>当前选中的申请：</h3>
+        <p>ID: <span th:text="${app.id}"></span></p>
+        <p>类型: <span th:text="${app.type}"></span></p>
+        <p>状态: <span th:text="${app.status}"></span></p>
+    </div>
+</body>
+</html>
+

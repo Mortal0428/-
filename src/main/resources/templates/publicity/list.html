@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>公示列表</title>
+</head>
+<body>
+<h2>公示列表</h2>
+<a th:href="@{/publicity/publish}" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">发布公示</a>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>申请人</th>
+        <th>类型</th>
+        <th>公示起止</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="p : ${publicities}">
+        <td th:text="${p.application.student.name}"></td>
+        <td th:text="${p.application.type}"></td>
+        <td th:text="${#temporals.format(p.startTime, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(p.endTime, 'yyyy-MM-dd')}"></td>
+        <td th:text="${p.status == 'publicizing' ? '公示中' : (p.status == 'has_objection' ? '有异议' : '无异议')}"></td>
+        <td><a th:href="@{'/publicity/' + ${p.id}}">查看</a></td>
+    </tr>
+</table>
+</body>
+</html>
+

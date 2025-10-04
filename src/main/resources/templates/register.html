@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <style>
+        body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .register-container {
+            width: 370px;
+            margin: 100px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 28px 24px 28px;
+        }
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #222;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        .login-link {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+        .msg {
+            text-align: center;
+            margin-top: 10px;
+            color: #e53935;
+        }
+        .success {
+            color: #43a047;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h2>用户注册</h2>
+    <form th:action="@{/register}" method="post">
+        <div class="form-group">
+            <label>用户名</label>
+            <input type="text" name="username" required />
+        </div>
+        <div class="form-group">
+            <label>密码</label>
+            <input type="password" name="password" required />
+        </div>
+        <div class="form-group">
+            <label>姓名</label>
+            <input type="text" name="name" required />
+        </div>
+        <div class="form-group">
+            <label>角色</label>
+            <select name="role" required>
+                <option value="student">学生</option>
+                <option value="counselor">辅导员</option>
+                <option value="group">评议小组</option>
+                <option value="dean">院长</option>
+                <option value="admin">系统管理员</option>
+            </select>
+        </div>
+        <button type="submit">注册</button>
+        <a class="login-link" th:href="@{/login}">已有账号？登录</a>
+        <div class="msg" th:if="${error}">
+            <span th:text="${error}"></span>
+        </div>
+    </form>
+</div>
+</body>
+</html>

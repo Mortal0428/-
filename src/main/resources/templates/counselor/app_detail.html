@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>申请详情 - 辅导员</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <style>
+        .detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .detail-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .detail-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+        
+        .detail-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .detail-content {
+            padding: 20px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .info-section h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            min-width: 100px;
+            margin-right: 10px;
+        }
+        
+        .info-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-draft { background: #e9ecef; color: #495057; }
+        .status-submitted { background: #cce5ff; color: #0066cc; }
+        .status-group_review { background: #fff3cd; color: #856404; }
+        .status-counselor_review { background: #d4edda; color: #155724; }
+        .status-dean_review { background: #d1ecf1; color: #0c5460; }
+        .status-publicity { background: #e2e3e5; color: #383d41; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        
+        .type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .type-grant { background: #e3f2fd; color: #1976d2; }
+        .type-scholarship { background: #f3e5f5; color: #7b1fa2; }
+        
+        .materials-section {
+            margin-top: 20px;
+        }
+        
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .material-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .material-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .material-icon {
+            font-size: 48px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .material-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .material-desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .material-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .audit-timeline {
+            margin-top: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #dee2e6;
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-desc {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .action-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="detail-container">
+    <div class="detail-card">
+        <div class="detail-header">
+            <h2>申请详情</h2>
+        </div>
+        <div class="detail-content">
+            <div class="info-grid">
+                <div class="info-section">
+                    <h3>基本信息</h3>
+                    <div class="info-row">
+                        <span class="info-label">学生姓名:</span>
+                        <span class="info-value" th:text="${app.student.name}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">学号:</span>
+                        <span class="info-value" th:text="${app.student.studentNo}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">班级:</span>
+                        <span class="info-value" th:text="${app.student.className}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">学院:</span>
+                        <span class="info-value" th:text="${app.student.college}"></span>
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>申请信息</h3>
+                    <div class="info-row">
+                        <span class="info-label">申请类型:</span>
+                        <span class="info-value">
+                            <span th:classappend="'type-badge type-' + ${app.type}" 
+                                  th:text="${app.type == 'grant' ? '助学金' : '国家励志奖学金'}"></span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">申请状态:</span>
+                        <span class="info-value">
+                            <span th:classappend="'status-badge status-' + ${app.status}" 
+                                  th:text="${app.status}"></span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">提交时间:</span>
+                        <span class="info-value" th:text="${#temporals.format(app.submitTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3>申请理由</h3>
+                <div style="background: white; padding: 15px; border-radius: 6px; white-space: pre-wrap;" th:text="${app.reason}"></div>
+            </div>
+            
+            <div class="materials-section">
+                <h3>上传材料</h3>
+                <div th:if="${materials.isEmpty()}" class="no-data">
+                    暂无上传材料
+                </div>
+                <div th:if="${!materials.isEmpty()}" class="materials-grid">
+                    <div th:each="m : ${materials}" class="material-card">
+                        <div class="material-icon">📄</div>
+                        <div class="material-name" th:text="${m.filePath}"></div>
+                        <div class="material-desc" th:text="${m.description}"></div>
+                        <div class="material-time" th:text="${#temporals.format(m.uploadTime, 'yyyy-MM-dd HH:mm')}"></div>
+                        <a th:href="${m.filePath}" target="_blank" class="btn btn-primary" style="margin-top: 10px; padding: 5px 15px; font-size: 12px;">查看文件</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="audit-timeline" th:if="${!auditRecords.isEmpty()}">
+                <h3>审核记录</h3>
+                <div th:each="record : ${auditRecords}" class="timeline-item">
+                    <div class="timeline-icon">
+                        <span th:text="${record.role == 'group' ? '组' : (record.role == 'counselor' ? '导' : (record.role == 'dean' ? '院' : '系'))}"></span>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span th:text="${record.role == 'group' ? '评议小组' : (record.role == 'counselor' ? '辅导员' : (record.role == 'dean' ? '院长' : '系统'))}"></span>
+                            <span th:classappend="'status-badge status-' + ${record.result}" 
+                                  th:text="${record.result == 'approved' ? '通过' : '拒绝'}" 
+                                  style="margin-left: 10px;"></span>
+                        </div>
+                        <div class="timeline-desc" th:text="${record.reason}"></div>
+                        <div class="timeline-time" th:text="${#temporals.format(record.reviewTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a th:href="@{/counselor/applications}" class="btn btn-secondary">返回列表</a>
+                <form th:if="${app.status == 'counselor_review'}" th:action="@{/counselor/applications/submitToDean}" method="post" style="display: inline;">
+                    <input type="hidden" name="id" th:value="${app.id}"/>
+                    <input type="text" name="reason" placeholder="复审意见" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;"/>
+                    <button type="submit" class="btn btn-primary">提交院长</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

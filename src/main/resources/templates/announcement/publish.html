@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发布公告</title>
+</head>
+<body>
+<h2>发布公告</h2>
+<form th:action="@{/announcements/publish}" method="post">
+    <div>
+        <label>标题：</label>
+        <input type="text" name="title" required />
+    </div>
+    <div>
+        <label>内容：</label>
+        <textarea name="content" rows="6" cols="40" required></textarea>
+    </div>
+    <div>
+        <button type="submit">发布</button>
+    </div>
+</form>
+<a th:href="@{/announcements}">返回公告列表</a>
+</body>
+</html>
+
+
+

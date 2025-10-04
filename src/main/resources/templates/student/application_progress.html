@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="content">
+<head>
+    <meta charset="UTF-8">
+    <title>申请进度</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+    <style>
+        .alert { padding: 12px; margin: 12px 0; border-radius: 4px; }
+        .alert-danger { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .alert-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        
+        .upload-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-text {
+            color: #6c757d;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .progress-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .progress-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .step.completed {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step.completed .step-number {
+            background: #28a745;
+            color: white;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .step.completed .step-title {
+            color: #28a745;
+        }
+        
+        .step-desc {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .step-time {
+            color: #28a745;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .info-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .no-materials {
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        .step-rejection {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 4px;
+            color: #c62828;
+            font-size: 14px;
+        }
+        
+        .step.rejected {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .step.rejected .step-number {
+            background: #f44336;
+            color: white;
+        }
+        
+        .step.rejected .step-title {
+            color: #f44336;
+        }
+        
+        .application-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .application-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .application-item:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.1);
+        }
+        
+        .application-item.selected {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+        
+        .application-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .application-type {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .application-status {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .application-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .application-actions {
+            flex-shrink: 0;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .application-tabs {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6c757d;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button:hover {
+            color: #007bff;
+            background: #f8f9fa;
+        }
+        
+        .tab-button.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+            font-weight: 600;
+        }
+        
+        .application-section {
+            margin-top: 20px;
+        }
+        
+        .application-section h4 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .no-applications {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .no-applications p {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>申请进度</h2>
+    <!-- 申请选择区域 -->
+    <div th:if="${allApplications != null && !allApplications.isEmpty()}" class="card" style="margin-bottom: 20px;">
+        <h3>我的申请</h3>
+        
+        <!-- 申请类型标签页 -->
+        <div class="application-tabs">
+            <button class="tab-button active" onclick="showApplications('all')">全部申请</button>
+            <button class="tab-button" onclick="showApplications('grant')">助学金</button>
+            <button class="tab-button" onclick="showApplications('scholarship')">国家励志奖学金</button>
+        </div>
+        
+        <!-- 助学金申请列表 -->
+        <div id="grant-applications" class="application-section" style="display: none;">
+            <h4>助学金申请</h4>
+            <div class="application-list">
+                <div th:each="application : ${allApplications}" th:if="${application.type == 'grant'}" class="application-item" th:classappend="${app != null && app.id == application.id} ? 'selected' : ''">
+                    <div class="application-info">
+                        <div class="application-type">
+                            <span>助学金</span>
+                        </div>
+                        <div class="application-status">
+                            <span th:text="${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(application.status, 'draft', '草稿'), 'submitted', '待初审'), 'group_review', '评议中'), 'counselor_review', '待复审'), 'dean_review', '待终审'), 'publicity', '公示中'), 'approved', '已通过'), 'rejected', '已驳回')}"></span>
+                        </div>
+                        <div class="application-time">
+                            <span th:text="${#temporals.format(application.updateTime, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    <div class="application-actions">
+                        <a th:href="@{'/student/application/progress?id=' + ${application.id}}" class="btn btn-sm" th:classappend="${app != null && app.id == application.id} ? 'btn-primary' : 'btn-outline'">
+                            查看详情
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(allApplications.stream().filter(app -> app.type == 'grant').toList())}" class="no-applications">
+                    <p>暂无助学金申请</p>
+                    <a class="btn btn-primary" th:href="@{/student/application/new}">新建助学金申请</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 奖学金申请列表 -->
+        <div id="scholarship-applications" class="application-section" style="display: none;">
+            <h4>国家励志奖学金申请</h4>
+            <div class="application-list">
+                <div th:each="application : ${allApplications}" th:if="${application.type == 'scholarship'}" class="application-item" th:classappend="${app != null && app.id == application.id} ? 'selected' : ''">
+                    <div class="application-info">
+                        <div class="application-type">
+                            <span>国家励志奖学金</span>
+                        </div>
+                        <div class="application-status">
+                            <span th:text="${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(application.status, 'draft', '草稿'), 'submitted', '待初审'), 'group_review', '评议中'), 'counselor_review', '待复审'), 'dean_review', '待终审'), 'publicity', '公示中'), 'approved', '已通过'), 'rejected', '已驳回')}"></span>
+                        </div>
+                        <div class="application-time">
+                            <span th:text="${#temporals.format(application.updateTime, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    <div class="application-actions">
+                        <a th:href="@{'/student/application/progress?id=' + ${application.id}}" class="btn btn-sm" th:classappend="${app != null && app.id == application.id} ? 'btn-primary' : 'btn-outline'">
+                            查看详情
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(allApplications.stream().filter(app -> app.type == 'scholarship').toList())}" class="no-applications">
+                    <p>暂无奖学金申请</p>
+                    <a class="btn btn-primary" th:href="@{/student/application/new}">新建奖学金申请</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 全部申请列表 -->
+        <div id="all-applications" class="application-section">
+            <h4>全部申请</h4>
+            <div class="application-list">
+                <div th:each="application : ${allApplications}" class="application-item" th:classappend="${app != null && app.id == application.id} ? 'selected' : ''">
+                    <div class="application-info">
+                        <div class="application-type">
+                            <span th:text="${application.type == 'grant' ? '助学金' : '国家励志奖学金'}"></span>
+                        </div>
+                        <div class="application-status">
+                            <span th:text="${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(application.status, 'draft', '草稿'), 'submitted', '待初审'), 'group_review', '评议中'), 'counselor_review', '待复审'), 'dean_review', '待终审'), 'publicity', '公示中'), 'approved', '已通过'), 'rejected', '已驳回')}"></span>
+                        </div>
+                        <div class="application-time">
+                            <span th:text="${#temporals.format(application.updateTime, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    <div class="application-actions">
+                        <a th:href="@{'/student/application/progress?id=' + ${application.id}}" class="btn btn-sm" th:classappend="${app != null && app.id == application.id} ? 'btn-primary' : 'btn-outline'">
+                            查看详情
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:if="${allApplications == null || allApplications.isEmpty()}">
+        <div class="card">
+            <h3>暂无申请记录</h3>
+            <p>您还没有创建任何申请。</p>
+            <a class="btn btn-primary" th:href="@{/student/application/new}">新建申请</a>
+        </div>
+    </div>
+    
+    <div th:if="${app != null}">
+        <div class="progress-section">
+            <h3>申请进度</h3>
+            <div class="progress-steps">
+                <div class="step" th:classappend="${app.status == 'draft' || app.status == 'submitted' || app.status == 'group_review' || app.status == 'counselor_review' || app.status == 'dean_review' || app.status == 'publicity' || app.status == 'approved' || app.status == 'rejected'} ? 'completed' : ''">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">提交申请</div>
+                        <div class="step-desc">填写申请信息并提交</div>
+                        <div class="step-time" th:if="${app.submitTime != null}" th:text="${#temporals.format(app.submitTime, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+                </div>
+                
+                <div class="step" th:classappend="${app.status == 'rejected' && latestRejection != null && latestRejection.role == 'group'} ? 'rejected' : (${app.status == 'group_review' || app.status == 'counselor_review' || app.status == 'dean_review' || app.status == 'publicity' || app.status == 'approved'} ? 'completed' : '')">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">评议小组初审</div>
+                        <div class="step-desc">评议小组审核申请材料</div>
+                        <div th:if="${app.status == 'rejected' && latestRejection != null && latestRejection.role == 'group'}" class="step-rejection">
+                            <strong>拒绝理由：</strong><span th:text="${latestRejection.reason}"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" th:classappend="${app.status == 'rejected' && latestRejection != null && latestRejection.role == 'counselor'} ? 'rejected' : (${app.status == 'counselor_review' || app.status == 'dean_review' || app.status == 'publicity' || app.status == 'approved'} ? 'completed' : '')">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">辅导员复审</div>
+                        <div class="step-desc">辅导员进行二次审核</div>
+                        <div th:if="${app.status == 'rejected' && latestRejection != null && latestRejection.role == 'counselor'}" class="step-rejection">
+                            <strong>拒绝理由：</strong><span th:text="${latestRejection.reason}"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" th:classappend="${app.status == 'rejected' && latestRejection != null && latestRejection.role == 'dean'} ? 'rejected' : (${app.status == 'dean_review' || app.status == 'publicity' || app.status == 'approved'} ? 'completed' : '')">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">院长终审</div>
+                        <div class="step-desc">院长进行最终审核</div>
+                        <div th:if="${app.status == 'rejected' && latestRejection != null && latestRejection.role == 'dean'}" class="step-rejection">
+                            <strong>拒绝理由：</strong><span th:text="${latestRejection.reason}"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" th:classappend="${app.status == 'publicity' || app.status == 'approved'} ? 'completed' : ''">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">公示</div>
+                        <div class="step-desc">公示7天无异议</div>
+                    </div>
+                </div>
+                
+                <div class="step" th:classappend="${app.status == 'approved'} ? 'completed' : ''">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-title">审核通过</div>
+                        <div class="step-desc">申请最终通过</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3>申请信息</h3>
+            <p>类型：<b th:text="${app.type == 'grant' ? '助学金' : '国家励志奖学金'}"></b></p>
+            <p>状态：<b th:text="${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(app.status, 'draft', '草稿'), 'submitted', '待初审'), 'group_review', '评议中'), 'counselor_review', '待复审'), 'dean_review', '待终审'), 'publicity', '公示中'), 'approved', '已通过'), 'rejected', '已驳回')}"></b></p>
+            <p>提交时间：<span th:text="${app.submitTime}"></span></p>
+        </div>
+        <div th:if="${latestRejection != null}" class="alert alert-danger">
+            <h4>最新拒绝理由：</h4>
+            <p th:text="${latestRejection.reason}"></p>
+            <small>拒绝时间：<span th:text="${#temporals.format(latestRejection.reviewTime, 'yyyy-MM-dd HH:mm')}"></span></small>
+            <small>拒绝角色：<span th:text="${latestRejection.role}"></span></small>
+        </div>
+        
+        <!-- 调试信息：显示所有审核记录 -->
+        <div th:if="${allAuditRecords != null && !allAuditRecords.isEmpty()}" class="card" style="margin-top: 20px; background: #f8f9fa;">
+            <h4>审核记录（调试信息）</h4>
+            <table class="table">
+                <thead>
+                    <tr><th>审核角色</th><th>结果</th><th>理由</th><th>审核时间</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="record : ${allAuditRecords}">
+                        <td th:text="${record.role}"></td>
+                        <td th:text="${record.result}"></td>
+                        <td th:text="${record.reason}"></td>
+                        <td th:text="${#temporals.format(record.reviewTime, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${uploadSuccess != null}" class="alert alert-success">
+            <span th:text="${uploadSuccess}"></span>
+        </div>
+        <div th:if="${uploadError != null}" class="alert alert-danger">
+            <span th:text="${uploadError}"></span>
+        </div>
+        <p>申请理由：</p>
+        <div class="card" style="background:#fafafa;border-color:#eee" th:text="${app.reason}"></div>
+        <h3>上传材料</h3>
+        <div th:if="${materials.isEmpty()}">
+            <p class="no-materials">暂无上传材料</p>
+        </div>
+        <div th:if="${!materials.isEmpty()}">
+            <table class="table">
+                <thead>
+                    <tr><th>文件名</th><th>说明</th><th>上传时间</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="m : ${materials}">
+                        <td th:text="${m.filePath}"></td>
+                        <td th:text="${m.description}"></td>
+                        <td th:text="${#temporals.format(m.uploadTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td><a class="btn btn-sm" th:href="${m.filePath}" target="_blank">查看</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <form th:action="@{'/student/application/material/' + ${app.id}}" method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <label>上传材料：</label>
+                <input type="file" name="file" required accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" />
+                <small class="form-text">支持格式：JPG, PNG, PDF, DOC, DOCX，最大10MB</small>
+            </div>
+            <div class="form-group">
+                <input type="text" name="description" placeholder="材料说明（可选）" class="form-control" />
+            </div>
+            <button class="btn" type="submit">上传</button>
+        </form>
+        <br/>
+        <form th:action="@{'/student/application/submit/' + ${app.id}}" method="post" th:if="${app.status == 'draft'}">
+            <button class="btn" type="submit">提交审核</button>
+        </form>
+        <form th:action="@{'/student/application/submitToGroup/' + ${app.id}}" method="post" th:if="${app.status == 'draft' || app.status == 'submitted'}">
+            <button class="btn" type="submit">提交至评议小组</button>
+        </form>
+        <a class="btn btn-outline" th:href="@{/student/application/new}">新建另一个申请</a>
+    </div>
+</div>
+
+<script>
+function showApplications(type) {
+    // 隐藏所有申请区域
+    document.getElementById('all-applications').style.display = 'none';
+    document.getElementById('grant-applications').style.display = 'none';
+    document.getElementById('scholarship-applications').style.display = 'none';
+    
+    // 移除所有按钮的active类
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 显示选中的申请区域
+    if (type === 'all') {
+        document.getElementById('all-applications').style.display = 'block';
+        document.querySelector('button[onclick="showApplications(\'all\')"]').classList.add('active');
+    } else if (type === 'grant') {
+        document.getElementById('grant-applications').style.display = 'block';
+        document.querySelector('button[onclick="showApplications(\'grant\')"]').classList.add('active');
+    } else if (type === 'scholarship') {
+        document.getElementById('scholarship-applications').style.display = 'block';
+        document.querySelector('button[onclick="showApplications(\'scholarship\')"]').classList.add('active');
+    }
+}
+</script>
+</body>
+</html>

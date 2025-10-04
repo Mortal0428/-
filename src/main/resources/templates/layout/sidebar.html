@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img th:src="@{/images/default-avatar.png}" alt="用户头像" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NjdFRUEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkMxNC4yMDkxIDEyIDE2IDEwLjIwOTEgMTYgOEMxNiA1Ljc5MDg2IDE0LjIwOTEgNCAxMiA0QzkuNzkwODYgNCA4IDUuNzkwODYgOCA4QzggMTAuMjA5MSA5Ljc5MDg2IDEyIDEyIDEyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyIDE0QzguNjc5MTUgMTQgNiAxNi42NzkxIDYgMjBIMThDMTggMTYuNjc5MSAxNS4zMjA5IDE0IDEyIDE0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='"/>
+                    </div>
+                    <div class="user-details">
+                        <div class="username" th:text="${#authentication.name}">用户</div>
+                        <div class="user-status">
+                            <span class="status-dot online"></span>
+                            <span>在线</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="logout-btn">
+                    <a th:href="@{/logout}" class="logout-link">
+                        <span class="logout-icon">↩</span>
+                        <span>注销</span>
+                    </a>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <!-- 学生菜单 -->
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
+                        <a th:href="@{/student/home}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/home'} ? 'active' : ''">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">主页</span>
+                        </a>
+                    </li>
+                    
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
+                        <a th:href="@{/student/profile}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/profile'} ? 'active' : ''">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">完善资料</span>
+                        </a>
+                    </li>
+                    
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
+                        <a th:href="@{/student/application/new}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/application/new'} ? 'active' : ''">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">新建申请</span>
+                        </a>
+                    </li>
+                    
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
+                        <a th:href="@{/student/application/progress}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/application/progress'} ? 'active' : ''">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">申请进度</span>
+                        </a>
+                    </li>
+                    
+                    <!-- 辅导员菜单 -->
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_COUNSELOR')}">
+                        <a th:href="@{/counselor/home}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/counselor/home'} ? 'active' : ''">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">主页</span>
+                        </a>
+                    </li>
+                    
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_COUNSELOR')}" class="nav-group">
+                        <div class="nav-group-header" @click="toggleGroup('counselor')">
+                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-text">申请管理</span>
+                            <span class="nav-arrow" :class="{'expanded': expandedGroups.counselor}">▼</span>
+                        </div>
+                        <ul class="nav-submenu" v-show="expandedGroups.counselor">
+                            <li>
+                                <a th:href="@{/counselor/applications}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/counselor/applications'} ? 'active' : ''">
+                                    <span class="nav-icon">📋</span>
+                                    <span class="nav-text">申请列表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/counselor/bind}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/counselor/bind'} ? 'active' : ''">
+                                    <span class="nav-icon">🔗</span>
+                                    <span class="nav-text">绑定管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <!-- 评议小组菜单 -->
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_GROUP')}">
+                        <a th:href="@{/group/review}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/group/review'} ? 'active' : ''">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">评议审核</span>
+                        </a>
+                    </li>
+                    
+                    <!-- 院长菜单 -->
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_DEAN')}">
+                        <a th:href="@{/dean/review}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/dean/review'} ? 'active' : ''">
+                            <span class="nav-icon">👨‍💼</span>
+                            <span class="nav-text">院长审核</span>
+                        </a>
+                    </li>
+                    
+                    <!-- 管理员菜单 -->
+                    <li th:if="${#authentication.authorities.![authority].contains('ROLE_ADMIN')}" class="nav-group">
+                        <div class="nav-group-header" @click="toggleGroup('admin')">
+                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-text">系统管理</span>
+                            <span class="nav-arrow" :class="{'expanded': expandedGroups.admin}">▼</span>
+                        </div>
+                        <ul class="nav-submenu" v-show="expandedGroups.admin">
+                            <li>
+                                <a th:href="@{/admin}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin'} ? 'active' : ''">
+                                    <span class="nav-icon">🏠</span>
+                                    <span class="nav-text">首页</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/admin/user/import}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin/user/import'} ? 'active' : ''">
+                                    <span class="nav-icon">👥</span>
+                                    <span class="nav-text">用户管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/admin/stats}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin/stats'} ? 'active' : ''">
+                                    <span class="nav-icon">📊</span>
+                                    <span class="nav-text">统计报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/admin/logs}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin/logs'} ? 'active' : ''">
+                                    <span class="nav-icon">📝</span>
+                                    <span class="nav-text">操作日志</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/announcements/publish}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/announcements/publish'} ? 'active' : ''">
+                                    <span class="nav-icon">📢</span>
+                                    <span class="nav-text">发布公告</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/publicity/publish}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/publicity/publish'} ? 'active' : ''">
+                                    <span class="nav-icon">📋</span>
+                                    <span class="nav-text">发布公示</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <span th:text="${breadcrumb}">当前位置</span>
+                </div>
+            </div>
+            <div class="content-body">
+                <div th:fragment="content">
+                    <!-- 页面内容将在这里插入 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const { createApp } = Vue;
+        
+        createApp({
+            data() {
+                return {
+                    expandedGroups: {
+                        admin: false,
+                        counselor: false
+                    }
+                }
+            },
+            methods: {
+                toggleGroup(groupName) {
+                    this.expandedGroups[groupName] = !this.expandedGroups[groupName];
+                }
+            },
+            mounted() {
+                // 根据当前URL自动展开相应的菜单组
+                const currentPath = window.location.pathname;
+                if (currentPath.includes('/admin') || currentPath.includes('/announcements') || currentPath.includes('/publicity')) {
+                    this.expandedGroups.admin = true;
+                }
+                if (currentPath.includes('/counselor')) {
+                    this.expandedGroups.counselor = true;
+                }
+            }
+        }).mount('#sidebar');
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>公告详情</title>
+</head>
+<body>
+<h2 th:text="${announcement.title}"></h2>
+<p>发布时间：<span th:text="${#temporals.format(announcement.createTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+<div th:text="${announcement.content}"></div>
+<a th:href="@{/announcements}">返回公告列表</a>
+</body>
+</html>
+

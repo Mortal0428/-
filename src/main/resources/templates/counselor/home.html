@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>辅导员首页</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h2>辅导员首页</h2>
+        <p>请选择要进入的功能：</p>
+        <p>
+            <a class="btn" th:href="@{/counselor/bind}">学生绑定审批</a>
+            <a class="btn" th:href="@{/counselor/applications}">申请列表筛选/复审</a>
+            <a class="btn btn-outline" th:href="@{/announcements}">公告</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
+
+

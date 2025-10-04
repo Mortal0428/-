@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发布公示</title>
+</head>
+<body>
+<h2>发布公示</h2>
+<form th:action="@{/publicity/publish}" method="post">
+    <label>选择要公示的申请：</label>
+    <select name="applicationId" required>
+        <option th:each="a : ${applications}" th:value="${a.id}" th:text="${a.student.name} + ' - ' + ${a.type}"></option>
+    </select>
+    <button type="submit">发布</button>
+</form>
+<a th:href="@{/publicity}">返回公示列表</a>
+</body>
+</html>
+
+
+

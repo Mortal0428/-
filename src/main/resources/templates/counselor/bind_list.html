@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定审批</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h2>学生绑定审批</h2>
+        <div style="margin-bottom:10px;">
+            <a class="btn btn-outline" th:href="@{'/counselor/bind?status=all'}">全部</a>
+            <a class="btn btn-outline" th:href="@{'/counselor/bind?status=pending'}">待处理</a>
+            <a class="btn btn-outline" th:href="@{'/counselor/bind?status=approved'}">已通过</a>
+            <a class="btn btn-outline" th:href="@{'/counselor/bind?status=rejected'}">已驳回</a>
+        </div>
+        <table class="table">
+            <tr><th>学生</th><th>学号</th><th>申请时间</th><th>状态</th><th>操作</th></tr>
+            <tr th:each="b : ${binds}">
+                <td th:text="${b.student.name}"></td>
+                <td th:text="${b.student.studentNo}"></td>
+                <td th:text="${#temporals.format(b.requestTime, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${b.status}"></td>
+                <td>
+                    <form th:if="${b.status == 'pending'}" th:action="@{'/counselor/bind/' + ${b.id} + '/approve'}" method="post" style="display:inline;">
+                        <button class="btn" type="submit">通过</button>
+                    </form>
+                    <form th:if="${b.status == 'pending'}" th:action="@{'/counselor/bind/' + ${b.id} + '/reject'}" method="post" style="display:inline;margin-left:6px;">
+                        <button class="btn btn-outline" type="submit">驳回</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(binds)}"><td colspan="5">暂无记录</td></tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
+
