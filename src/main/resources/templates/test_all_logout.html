@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>所有用户端注销功能测试</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <div class="content-body">
+                <h1>所有用户端注销功能测试</h1>
+                
+                <div style="margin: 20px 0;">
+                    <h3>当前用户信息：</h3>
+                    <p>用户名: <span th:text="${#authentication.name}">未登录</span></p>
+                    <p>角色: <span th:text="${#authentication.authorities}">无</span></p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3>各用户端注销功能测试：</h3>
+                    
+                    <div style="margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                        <h4>学生端注销功能</h4>
+                        <p>访问学生页面测试注销功能：</p>
+                        <ul>
+                            <li><a th:href="@{/student/home}">学生主页</a></li>
+                            <li><a th:href="@{/student/profile}">学生资料</a></li>
+                            <li><a th:href="@{/student/application/progress}">申请进度</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                        <h4>辅导员端注销功能</h4>
+                        <p>访问辅导员页面测试注销功能：</p>
+                        <ul>
+                            <li><a th:href="@{/counselor/home}">辅导员主页</a></li>
+                            <li><a th:href="@{/counselor/applications}">申请管理</a></li>
+                            <li><a th:href="@{/counselor/bind}">学生绑定</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                        <h4>评议小组端注销功能</h4>
+                        <p>访问评议小组页面测试注销功能：</p>
+                        <ul>
+                            <li><a th:href="@{/group/review}">评议审核</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                        <h4>院长端注销功能</h4>
+                        <p>访问院长页面测试注销功能：</p>
+                        <ul>
+                            <li><a th:href="@{/dean/review}">院长审核</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                        <h4>管理员端注销功能</h4>
+                        <p>访问管理员页面测试注销功能：</p>
+                        <ul>
+                            <li><a th:href="@{/admin}">管理员主页</a></li>
+                            <li><a th:href="@{/admin/user/import}">用户管理</a></li>
+                            <li><a th:href="@{/admin/stats}">统计报表</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3>注销功能特点：</h3>
+                    <ul>
+                        <li>✅ 所有用户端都有统一的注销按钮</li>
+                        <li>✅ 使用POST请求，符合Spring Security安全要求</li>
+                        <li>✅ 统一的视觉样式和交互体验</li>
+                        <li>✅ 注销后重定向到登录页面</li>
+                        <li>✅ 会话失效和Cookie删除</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

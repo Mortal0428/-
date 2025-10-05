@@ -4,36 +4,41 @@
     <meta charset="UTF-8">
     <title>评议小组审核</title>
     <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <h2>待审核（评议小组）</h2>
-        <table class="table">
-            <tr><th>学生</th><th>学号</th><th>类型</th><th>理由</th><th>操作</th></tr>
-            <tr th:each="a : ${apps}">
-                <td th:text="${a.student.name}"></td>
-                <td th:text="${a.student.studentNo}"></td>
-                <td th:text="${a.type == 'grant' ? '助学金' : '国家励志奖学金'}"></td>
-                <td th:text="${a.reason}"></td>
-                <td>
-                    <a class="btn btn-sm" th:href="@{'/group/review/' + ${a.id}}">查看详情</a>
-                    <form th:action="@{'/group/review/' + ${a.id}}" method="post" style="display:inline; margin-left:6px;">
-                        <input type="hidden" name="result" value="approved"/>
-                        <input type="text" name="reason" placeholder="意见" style="width:120px;"/>
-                        <button class="btn btn-sm" type="submit">通过</button>
-                    </form>
-                    <form th:action="@{'/group/review/' + ${a.id}}" method="post" style="display:inline; margin-left:6px;">
-                        <input type="hidden" name="result" value="rejected"/>
-                        <input type="text" name="reason" placeholder="驳回理由" style="width:120px;"/>
-                        <button class="btn btn-sm btn-outline" type="submit">驳回</button>
-                    </form>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(apps)}"><td colspan="5">暂无待审核</td></tr>
-        </table>
+    <div th:replace="~{layout/group_sidebar}">
+        <div th:fragment="content">
+            <div class="container">
+                <div class="card">
+                    <h2>待审核（评议小组）</h2>
+                    <table class="table">
+                        <tr><th>学生</th><th>学号</th><th>类型</th><th>理由</th><th>操作</th></tr>
+                        <tr th:each="a : ${apps}">
+                            <td th:text="${a.student.name}"></td>
+                            <td th:text="${a.student.studentNo}"></td>
+                            <td th:text="${a.type == 'grant' ? '助学金' : '国家励志奖学金'}"></td>
+                            <td th:text="${a.reason}"></td>
+                            <td>
+                                <a class="btn btn-sm" th:href="@{'/group/review/' + ${a.id}}">查看详情</a>
+                                <form th:action="@{'/group/review/' + ${a.id}}" method="post" style="display:inline; margin-left:6px;">
+                                    <input type="hidden" name="result" value="approved"/>
+                                    <input type="text" name="reason" placeholder="意见" style="width:120px;"/>
+                                    <button class="btn btn-sm" type="submit">通过</button>
+                                </form>
+                                <form th:action="@{'/group/review/' + ${a.id}}" method="post" style="display:inline; margin-left:6px;">
+                                    <input type="hidden" name="result" value="rejected"/>
+                                    <input type="text" name="reason" placeholder="驳回理由" style="width:120px;"/>
+                                    <button class="btn btn-sm btn-outline" type="submit">驳回</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(apps)}"><td colspan="5">暂无待审核</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 </body>
 </html>
 

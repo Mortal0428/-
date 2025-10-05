@@ -260,10 +260,12 @@
                     </div>
                 </div>
                 <div class="logout-btn">
-                    <a th:href="@{/logout}" class="logout-link">
-                        <span class="logout-icon">↩</span>
-                        <span>注销</span>
-                    </a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="logout-link" style="background: none; border: none; color: inherit; cursor: pointer; padding: 0; font: inherit;">
+                            <span class="logout-icon">↩</span>
+                            <span>注销</span>
+                        </button>
+                    </form>
                 </div>
             </div>
             

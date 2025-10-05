@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户检查</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+    <div class="container">
+        <h1>用户检查结果</h1>
+        
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        
+        <div th:if="${user}">
+            <h3>用户信息：</h3>
+            <table class="table">
+                <tr>
+                    <td><strong>用户名：</strong></td>
+                    <td th:text="${user.username}"></td>
+                </tr>
+                <tr>
+                    <td><strong>姓名：</strong></td>
+                    <td th:text="${user.name}"></td>
+                </tr>
+                <tr>
+                    <td><strong>角色：</strong></td>
+                    <td th:text="${user.role}"></td>
+                </tr>
+                <tr>
+                    <td><strong>工号：</strong></td>
+                    <td th:text="${user.staffNo}"></td>
+                </tr>
+                <tr>
+                    <td><strong>学号：</strong></td>
+                    <td th:text="${user.studentNo}"></td>
+                </tr>
+                <tr>
+                    <td><strong>密码长度：</strong></td>
+                    <td th:text="${passwordLength}"></td>
+                </tr>
+                <tr>
+                    <td><strong>密码开头：</strong></td>
+                    <td th:text="${passwordStart}"></td>
+                </tr>
+            </table>
+            
+            <h3>密码验证测试：</h3>
+            <table class="table">
+                <tr>
+                    <td><strong>密码 "123456"：</strong></td>
+                    <td th:class="${matches123456} ? 'text-success' : 'text-danger'" 
+                        th:text="${matches123456} ? '匹配' : '不匹配'"></td>
+                </tr>
+                <tr>
+                    <td><strong>密码 "counselor123"：</strong></td>
+                    <td th:class="${matchesCounselor123} ? 'text-success' : 'text-danger'" 
+                        th:text="${matchesCounselor123} ? '匹配' : '不匹配'"></td>
+                </tr>
+                <tr>
+                    <td><strong>密码 "123"：</strong></td>
+                    <td th:class="${matches123} ? 'text-success' : 'text-danger'" 
+                        th:text="${matches123} ? '匹配' : '不匹配'"></td>
+                </tr>
+            </table>
+            
+            <div style="margin: 20px 0;">
+                <h3>登录建议：</h3>
+                <p>请尝试使用以下密码登录：</p>
+                <ul>
+                    <li th:if="${matches123456}">✅ 用户名: <span th:text="${user.username}"></span> | 密码: 123456</li>
+                    <li th:if="${matchesCounselor123}">✅ 用户名: <span th:text="${user.username}"></span> | 密码: counselor123</li>
+                    <li th:if="${matches123}">✅ 用户名: <span th:text="${user.username}"></span> | 密码: 123</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <a th:href="@{/debug/users}" class="btn">返回用户列表</a>
+            <a th:href="@{/login}" class="btn">去登录</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注销功能测试</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <div class="content-body">
+                <h1>注销功能测试</h1>
+                
+                <div style="margin: 20px 0;">
+                    <h3>当前用户信息：</h3>
+                    <p>用户名: <span th:text="${#authentication.name}">未登录</span></p>
+                    <p>角色: <span th:text="${#authentication.authorities}">无</span></p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3>注销方法测试：</h3>
+                    
+                    <div style="margin: 10px 0;">
+                        <h4>方法1: GET请求（可能不工作）</h4>
+                        <a th:href="@{/logout}" style="color: #e74c3c; text-decoration: none; padding: 8px 16px; border: 1px solid #e74c3c; border-radius: 4px;">
+                            GET注销
+                        </a>
+                    </div>
+                    
+                    <div style="margin: 10px 0;">
+                        <h4>方法2: POST请求（推荐）</h4>
+                        <form th:action="@{/logout}" method="post" style="display: inline;">
+                            <button type="submit" style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                                POST注销
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div style="margin: 10px 0;">
+                        <h4>方法3: 侧边栏样式注销</h4>
+                        <form th:action="@{/logout}" method="post" style="display: inline;">
+                            <button type="submit" class="logout-link" style="background: none; border: none; color: inherit; cursor: pointer; padding: 0; font: inherit;">
+                                <span class="logout-icon">↩</span>
+                                <span>注销</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3>测试说明：</h3>
+                    <ul>
+                        <li>方法1使用GET请求，Spring Security默认不支持</li>
+                        <li>方法2使用POST请求，这是Spring Security推荐的方式</li>
+                        <li>方法3使用侧边栏样式，与系统其他页面保持一致</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

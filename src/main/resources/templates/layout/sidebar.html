@@ -25,10 +25,12 @@
                     </div>
                 </div>
                 <div class="logout-btn">
-                    <a th:href="@{/logout}" class="logout-link">
-                        <span class="logout-icon">↩</span>
-                        <span>注销</span>
-                    </a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="logout-link" style="background: none; border: none; color: inherit; cursor: pointer; padding: 0; font: inherit;">
+                            <span class="logout-icon">↩</span>
+                            <span>注销</span>
+                        </button>
+                    </form>
                 </div>
             </div>
             
@@ -36,28 +38,28 @@
                 <ul class="nav-menu">
                     <!-- 学生菜单 -->
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
-                        <a th:href="@{/student/home}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/home'} ? 'active' : ''">
+                        <a th:href="@{/student/home}" class="nav-item" >
                             <span class="nav-icon">🏠</span>
                             <span class="nav-text">主页</span>
                         </a>
                     </li>
                     
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
-                        <a th:href="@{/student/profile}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/profile'} ? 'active' : ''">
+                        <a th:href="@{/student/profile}" class="nav-item" >
                             <span class="nav-icon">👤</span>
                             <span class="nav-text">完善资料</span>
                         </a>
                     </li>
                     
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
-                        <a th:href="@{/student/application/new}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/application/new'} ? 'active' : ''">
+                        <a th:href="@{/student/application/new}" class="nav-item" >
                             <span class="nav-icon">📝</span>
                             <span class="nav-text">新建申请</span>
                         </a>
                     </li>
                     
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_STUDENT')}">
-                        <a th:href="@{/student/application/progress}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/student/application/progress'} ? 'active' : ''">
+                        <a th:href="@{/student/application/progress}" class="nav-item" >
                             <span class="nav-icon">📊</span>
                             <span class="nav-text">申请进度</span>
                         </a>
@@ -65,7 +67,7 @@
                     
                     <!-- 辅导员菜单 -->
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_COUNSELOR')}">
-                        <a th:href="@{/counselor/home}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/counselor/home'} ? 'active' : ''">
+                        <a th:href="@{/counselor/home}" class="nav-item" >
                             <span class="nav-icon">🏠</span>
                             <span class="nav-text">主页</span>
                         </a>
@@ -79,13 +81,13 @@
                         </div>
                         <ul class="nav-submenu" v-show="expandedGroups.counselor">
                             <li>
-                                <a th:href="@{/counselor/applications}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/counselor/applications'} ? 'active' : ''">
+                                <a th:href="@{/counselor/applications}" class="nav-subitem" >
                                     <span class="nav-icon">📋</span>
                                     <span class="nav-text">申请列表</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/counselor/bind}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/counselor/bind'} ? 'active' : ''">
+                                <a th:href="@{/counselor/bind}" class="nav-subitem" >
                                     <span class="nav-icon">🔗</span>
                                     <span class="nav-text">绑定管理</span>
                                 </a>
@@ -95,7 +97,7 @@
                     
                     <!-- 评议小组菜单 -->
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_GROUP')}">
-                        <a th:href="@{/group/review}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/group/review'} ? 'active' : ''">
+                        <a th:href="@{/group/review}" class="nav-item" >
                             <span class="nav-icon">👥</span>
                             <span class="nav-text">评议审核</span>
                         </a>
@@ -103,7 +105,7 @@
                     
                     <!-- 院长菜单 -->
                     <li th:if="${#authentication.authorities.![authority].contains('ROLE_DEAN')}">
-                        <a th:href="@{/dean/review}" class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/dean/review'} ? 'active' : ''">
+                        <a th:href="@{/dean/review}" class="nav-item" >
                             <span class="nav-icon">👨‍💼</span>
                             <span class="nav-text">院长审核</span>
                         </a>
@@ -118,37 +120,37 @@
                         </div>
                         <ul class="nav-submenu" v-show="expandedGroups.admin">
                             <li>
-                                <a th:href="@{/admin}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin'} ? 'active' : ''">
+                                <a th:href="@{/admin}" class="nav-subitem" >
                                     <span class="nav-icon">🏠</span>
                                     <span class="nav-text">首页</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/admin/user/import}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin/user/import'} ? 'active' : ''">
+                                <a th:href="@{/admin/user/import}" class="nav-subitem" >
                                     <span class="nav-icon">👥</span>
                                     <span class="nav-text">用户管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/admin/stats}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin/stats'} ? 'active' : ''">
+                                <a th:href="@{/admin/stats}" class="nav-subitem" >
                                     <span class="nav-icon">📊</span>
                                     <span class="nav-text">统计报表</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/admin/logs}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/admin/logs'} ? 'active' : ''">
+                                <a th:href="@{/admin/logs}" class="nav-subitem" >
                                     <span class="nav-icon">📝</span>
                                     <span class="nav-text">操作日志</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/announcements/publish}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/announcements/publish'} ? 'active' : ''">
+                                <a th:href="@{/announcements/publish}" class="nav-subitem" >
                                     <span class="nav-icon">📢</span>
                                     <span class="nav-text">发布公告</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/publicity/publish}" class="nav-subitem" th:classappend="${#httpServletRequest.requestURI == '/publicity/publish'} ? 'active' : ''">
+                                <a th:href="@{/publicity/publish}" class="nav-subitem" >
                                     <span class="nav-icon">📋</span>
                                     <span class="nav-text">发布公示</span>
                                 </a>

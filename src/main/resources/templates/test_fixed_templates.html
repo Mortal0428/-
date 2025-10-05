@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>模板修复测试</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+    <div class="container">
+        <h1>模板修复测试</h1>
+        <p>测试各用户端模板是否修复成功：</p>
+        
+        <div style="margin: 20px 0;">
+            <h3>修复的问题：</h3>
+            <ul>
+                <li>✅ 修复了辅导员端主页的 Thymeleaf 语法错误</li>
+                <li>✅ 修复了辅导员端申请列表页面的 Thymeleaf 语法错误</li>
+                <li>✅ 修复了管理员端主页的 Thymeleaf 语法错误</li>
+                <li>✅ 所有用户端现在都有统一的注销功能</li>
+            </ul>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <h3>测试链接：</h3>
+            <ul>
+                <li><a th:href="@{/counselor/home}">辅导员主页（已修复）</a></li>
+                <li><a th:href="@{/counselor/applications}">辅导员申请列表（已修复）</a></li>
+                <li><a th:href="@{/admin}">管理员主页（已修复）</a></li>
+                <li><a th:href="@{/student/home}">学生主页（正常）</a></li>
+            </ul>
+        </div>
+        
+        <div style="margin: 20px 0; padding: 20px; background: #e8f5e8; border-radius: 8px;">
+            <h3>修复说明：</h3>
+            <p><strong>问题原因：</strong> Thymeleaf 的 <code>th:replace</code> 语法错误</p>
+            <p><strong>错误语法：</strong> <code>th:replace="~{layout/counselor_sidebar :: ~{::content}}"</code></p>
+            <p><strong>正确语法：</strong> <code>th:replace="~{layout/counselor_sidebar :: content}"</code></p>
+            <p><strong>修复结果：</strong> 所有用户端现在都可以正常访问，并且都有注销功能</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户调试</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+    <div class="container">
+        <h1>用户调试信息</h1>
+        
+        <h3>所有用户列表：</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>角色</th>
+                    <th>工号</th>
+                    <th>学号</th>
+                    <th>密码长度</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td th:text="${user.staffNo}"></td>
+                    <td th:text="${user.studentNo}"></td>
+                    <td th:text="${#strings.length(user.password)}"></td>
+                    <td>
+                        <a th:href="@{/debug/check-user(username=${user.username})}" class="btn btn-sm">检查</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="margin: 20px 0;">
+            <h3>快速测试：</h3>
+            <ul>
+                <li><a th:href="@{/debug/check-user(username='counselor1')}">检查辅导员1</a></li>
+                <li><a th:href="@{/debug/check-user(username='admin')}">检查管理员</a></li>
+                <li><a th:href="@{/debug/check-user(username='student1')}">检查学生1</a></li>
+            </ul>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <h3>登录测试：</h3>
+            <p>请尝试使用以下账号登录：</p>
+            <ul>
+                <li><strong>辅导员：</strong> counselor1 / counselor123</li>
+                <li><strong>管理员：</strong> admin / admin123</li>
+                <li><strong>学生：</strong> student1 / student123</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

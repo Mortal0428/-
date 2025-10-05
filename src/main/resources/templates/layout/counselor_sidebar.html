@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">辅导员管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img th:src="@{/images/default-avatar.png}" alt="用户头像" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NzdFRUEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkMxNC4yMDkxIDEyIDE2IDEwLjIwOTEgMTYgOEMxNiA1Ljc5MDg2IDE0LjIwOTEgNCAxMiA0QzkuNzkwODYgNCA4IDUuNzkwODYgOCA4QzggMTAuMjA5MSA5Ljc5MDg2IDEyIDEyIDEyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyIDE0QzguNjc5MTUgMTQgNiAxNi42NzkxIDYgMjBIMThDMTggMTYuNjc5MSAxNS4zMjA5IDE0IDEyIDE0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='"/>
+                    </div>
+                    <div class="user-details">
+                        <div class="username" th:text="${#authentication.name}">辅导员</div>
+                        <div class="user-status">
+                            <span class="status-dot online"></span>
+                            <span>在线</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="logout-btn">
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="logout-link" style="background: none; border: none; color: inherit; cursor: pointer; padding: 0; font: inherit;">
+                            <span class="logout-icon">↩</span>
+                            <span>注销</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <!-- 辅导员菜单 -->
+                    <li>
+                        <a th:href="@{/counselor/home}" class="nav-item">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">主页</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/counselor/bind}" class="nav-item">
+                            <span class="nav-icon">🔗</span>
+                            <span class="nav-text">学生绑定</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/counselor/applications}" class="nav-item">
+                            <span class="nav-icon">📋</span>
+                            <span class="nav-text">申请管理</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/announcements}" class="nav-item">
+                            <span class="nav-icon">📢</span>
+                            <span class="nav-text">公告</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <span th:text="${breadcrumb}">当前位置</span>
+                </div>
+            </div>
+            <div class="content-body">
+                <div th:fragment="content">
+                    <!-- 页面内容将在这里插入 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -4,47 +4,52 @@
     <meta charset="UTF-8">
     <title>管理员首页</title>
     <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <h2>管理员首页</h2>
-        <div class="nav-links">
-            <a class="btn" th:href="@{/admin/user/import}">用户管理</a>
-            <a class="btn" th:href="@{/admin/stats}">统计报表</a>
-            <a class="btn" th:href="@{/admin/logs}">操作日志</a>
-            <a class="btn" th:href="@{/announcements/publish}">发布公告</a>
-            <a class="btn" th:href="@{/publicity/publish}">发布公示</a>
-        </div>
-        
-        <h3>待确认公示的申请</h3>
-        <div th:if="${publicityApps.isEmpty()}">
-            <p>当前没有待确认的公示申请。</p>
-        </div>
-        <div th:if="${!publicityApps.isEmpty()}">
-            <table class="table">
-                <tr>
-                    <th>学生姓名</th>
-                    <th>学号</th>
-                    <th>申请类型</th>
-                    <th>申请理由</th>
-                    <th>操作</th>
-                </tr>
-                <tr th:each="app : ${publicityApps}">
-                    <td th:text="${app.student.name}"></td>
-                    <td th:text="${app.student.studentNo}"></td>
-                    <td th:text="${app.type == 'grant' ? '助学金' : '国家励志奖学金'}"></td>
-                    <td th:text="${app.reason}"></td>
-                    <td>
-                        <form th:action="@{/admin/confirmPublicity}" method="post" style="display:inline;">
-                            <input type="hidden" name="id" th:value="${app.id}"/>
-                            <button class="btn btn-sm" type="submit">确认公示完成</button>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+    <div th:replace="~{layout/admin_sidebar}">
+        <div th:fragment="content">
+            <div class="container">
+                <div class="card">
+                    <h2>管理员首页</h2>
+                    <div class="nav-links">
+                        <a class="btn" th:href="@{/admin/user/import}">用户管理</a>
+                        <a class="btn" th:href="@{/admin/stats}">统计报表</a>
+                        <a class="btn" th:href="@{/admin/logs}">操作日志</a>
+                        <a class="btn" th:href="@{/announcements/publish}">发布公告</a>
+                        <a class="btn" th:href="@{/publicity/publish}">发布公示</a>
+                    </div>
+                    
+                    <h3>待确认公示的申请</h3>
+                    <div th:if="${publicityApps.isEmpty()}">
+                        <p>当前没有待确认的公示申请。</p>
+                    </div>
+                    <div th:if="${!publicityApps.isEmpty()}">
+                        <table class="table">
+                            <tr>
+                                <th>学生姓名</th>
+                                <th>学号</th>
+                                <th>申请类型</th>
+                                <th>申请理由</th>
+                                <th>操作</th>
+                            </tr>
+                            <tr th:each="app : ${publicityApps}">
+                                <td th:text="${app.student.name}"></td>
+                                <td th:text="${app.student.studentNo}"></td>
+                                <td th:text="${app.type == 'grant' ? '助学金' : '国家励志奖学金'}"></td>
+                                <td th:text="${app.reason}"></td>
+                                <td>
+                                    <form th:action="@{/admin/confirmPublicity}" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" th:value="${app.id}"/>
+                                        <button class="btn btn-sm" type="submit">确认公示完成</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>申请列表（辅导员）</title>
     <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
     <style>
         .page-container {
             min-height: 100vh;
@@ -230,8 +231,9 @@
     </style>
 </head>
 <body>
-<div class="page-container">
-    <div class="main-card">
+    <div th:replace="~{layout/counselor_sidebar :: content}">
+        <div class="page-container">
+            <div class="main-card">
         <div class="page-header">
             <h1 class="page-title">申请管理</h1>
             <p class="page-subtitle">管理学生资助申请，审核申请材料</p>
@@ -343,8 +345,9 @@
                     </tbody>
                 </table>
             </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
